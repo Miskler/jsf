@@ -548,11 +548,11 @@ def test_use_defaults_and_examples(TestData):
 def test_gen_empty_list(TestData):
     with open(TestData / "empty-list.json") as file:
         schema = json.load(file)
-    p = JSF(schema)
+    p = JSF(schema, allow_none_optionals=0.0)
 
     fake_data = [p.generate(use_defaults=True, use_examples=True) for _ in range(10)]
     for d in fake_data:
         assert isinstance(d, dict)
-        assert d in ["items"]
+        assert "items" in d
         assert isinstance(d["items"], list)
         assert len(d["items"]) == 0

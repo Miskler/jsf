@@ -22,6 +22,8 @@ class Array(BaseSchema):
         try:
             return super().generate(context)
         except ProviderNotSetException:
+            if self.items is None:
+                return []
             if isinstance(self.fixed, str):
                 self.minItems = self.maxItems = eval(self.fixed, context)()
             elif isinstance(self.fixed, int):
@@ -47,8 +49,11 @@ class Array(BaseSchema):
             return output
 
     def model(self, context: Dict[str, Any]) -> Tuple[Type, Any]:
-        _type = eval(
-            f"List[Union[{','.join([self.items.model(context)[0].__name__])}]]",
-            context["__internal__"],
-        )
+        if self.items is None:
+            _type = List[Any]
+        else:
+            _type = eval(
+                f"List[Union[{','.join([self.items.model(context)[0].__name__])}]]",
+                context["__internal__"],
+            )
         return self.to_pydantic(context, _type)
