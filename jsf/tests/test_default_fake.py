@@ -556,3 +556,33 @@ def test_gen_empty_list(TestData):
         assert "items" in d
         assert isinstance(d["items"], list)
         assert len(d["items"]) == 0
+
+def test_gen_empty_list_pro(TestData):
+    with open(TestData / "empty-list-pro.json") as file:
+        schema = json.load(file)
+    p = JSF(schema, allow_none_optionals=0.0)
+
+    fake_data = [p.generate(use_defaults=True, use_examples=True) for _ in range(10)]
+    for d in fake_data:
+        assert isinstance(d, dict)
+        assert "content" in d
+
+        assert isinstance(d["content"], dict)
+        assert "list" in d["content"]
+        
+        assert isinstance(d["content"]["list"], list)
+        assert len(d["content"]["list"]) == 0
+        
+        assert "sub-list" in d["content"]
+        assert isinstance(d["content"]["sub-list"], list)
+        
+        assert len(d["content"]["sub-list"]) == 1
+        assert isinstance(d["content"]["sub-list"][0], list)
+        assert len(d["content"]["sub-list"][0]) == 0
+
+        assert "jon-empty-sub-list" in d["content"]
+        assert isinstance(d["content"]["jon-empty-sub-list"], list)
+        assert len(d["content"]["jon-empty-sub-list"]) == 1
+        assert isinstance(d["content"]["jon-empty-sub-list"][0], list)
+        assert len(d["content"]["jon-empty-sub-list"][0]) == 1
+        assert isinstance(d["content"]["jon-empty-sub-list"][0][0], str)
