@@ -8,7 +8,7 @@
         "list": {
           "type": "array"
         },
-        "jon-empty-sub-list": {
+        "non-empty-sub-list": {
           "type": "array",
           "items": {
             "type": "array",

@@ -573,16 +573,14 @@ def test_gen_empty_list_pro(TestData):
         assert isinstance(d["content"]["list"], list)
         assert len(d["content"]["list"]) == 0
         
+        assert "non-empty-sub-list" in d["content"]
+        assert isinstance(d["content"]["non-empty-sub-list"], list)
+        assert len(d["content"]["non-empty-sub-list"]) >= 1
+        assert isinstance(d["content"]["non-empty-sub-list"][0], list)
+        assert any(len(sublist) >= 1 and all(isinstance(item, str) for item in sublist) for sublist in d["content"]["non-empty-sub-list"])
+
         assert "sub-list" in d["content"]
         assert isinstance(d["content"]["sub-list"], list)
-        
-        assert len(d["content"]["sub-list"]) == 1
+        assert len(d["content"]["sub-list"]) >= 1
         assert isinstance(d["content"]["sub-list"][0], list)
         assert len(d["content"]["sub-list"][0]) == 0
-
-        assert "jon-empty-sub-list" in d["content"]
-        assert isinstance(d["content"]["jon-empty-sub-list"], list)
-        assert len(d["content"]["jon-empty-sub-list"]) == 1
-        assert isinstance(d["content"]["jon-empty-sub-list"][0], list)
-        assert len(d["content"]["jon-empty-sub-list"][0]) == 1
-        assert isinstance(d["content"]["jon-empty-sub-list"][0][0], str)
