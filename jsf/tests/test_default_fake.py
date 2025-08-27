@@ -544,3 +544,15 @@ def test_use_defaults_and_examples(TestData):
         assert d["name"] in ["Chop", "Luna", "Thanos"]
         breed = d.get("breed")
         assert breed is None or breed == "Mixed Breed"
+
+def test_gen_empty_list(TestData):
+    with open(TestData / "empty-list.json") as file:
+        schema = json.load(file)
+    p = JSF(schema)
+
+    fake_data = [p.generate(use_defaults=True, use_examples=True) for _ in range(10)]
+    for d in fake_data:
+        assert isinstance(d, dict)
+        assert d in ["items"]
+        assert isinstance(d["items"], list)
+        assert len(d["items"]) == 0
