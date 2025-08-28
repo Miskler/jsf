@@ -174,7 +174,15 @@ class JSF:
             }
         )
         root = arr if root is None else root
-        arr.items = self.__parse_definition(name, f"{path}/items", schema["items"], root=root)
+        if schema.get("items") is not None:
+            arr.items = self.__parse_definition(name, f"{path}/items", schema["items"], root=root)
+        else:
+            arr.items = self.__parse_definition(
+                name,
+                f"{path}/items",
+                {"type": list(Primitives.keys())},
+                root=root,
+            )
         return arr
 
     def __parse_tuple(
@@ -291,7 +299,11 @@ class JSF:
             elif item_type == "object" and "oneOf" in schema:
                 return self.__parse_oneOf(name, path, schema, root)
             elif item_type == "array":
-                if (schema.get("contains") is not None) or isinstance(schema.get("items"), dict):
+                if (
+                    (schema.get("contains") is not None)
+                    or isinstance(schema.get("items"), dict)
+                    or schema.get("items") is None
+                ):
                     return self.__parse_array(name, path, schema, root)
                 if isinstance(schema.get("items"), list) and all(
                     isinstance(x, dict) for x in schema.get("items", [])
